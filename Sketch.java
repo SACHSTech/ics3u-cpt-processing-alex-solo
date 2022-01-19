@@ -6,7 +6,6 @@ public class Sketch extends PApplet {
   int shipY = 0;
   int lives = 3;
   float[] bulletsX = new float [30];
-
 	
 	
   /**
@@ -36,7 +35,21 @@ public class Sketch extends PApplet {
 	  
     background(32);
 
-    rect(shipX, shipY, width/10, height/20);
+    if (lives == 3){
+      ellipse(700, 20, 25, 25);
+      ellipse(625, 20, 25, 25);
+      ellipse(550, 20, 25, 25);
+    }
+    if (lives == 2){
+      ellipse(700, 20, 25, 25);
+      ellipse(625, 20, 25, 25);
+    }
+    if (lives == 1){
+      ellipse(700, 20, 25, 25);
+    }
+    int yes = width/10;
+    int no = height/20;
+    rect(shipX, shipY, yes, no);
 
     if (keyPressed){
       if (key == 'w'){
@@ -58,12 +71,16 @@ public class Sketch extends PApplet {
       rect(bulletsX[i], bulletsY, 20, 5);
 
       bulletsX[i] --;
-
-      for (int j = 0; j < bulletsX.length; j++){
-        if (bulletsX[j] < shipX + width/10 && bulletsY > shipY && bulletsY + 5 < shipY + height/20 ){
-          lives --;
-        }
+      
+      
+      if (shipX < bulletsX[i] + 20 && shipX + yes > bulletsX[i] && shipY < bulletsY + 5 && shipY + no > bulletsY){
+        bulletsX[i] = -20; 
+        lives --;
       }
+         
+        
+        
+    
      
     }
 
