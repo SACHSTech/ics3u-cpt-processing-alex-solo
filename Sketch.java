@@ -3,6 +3,7 @@ import processing.core.PFont;
 
 public class Sketch extends PApplet {
 
+  PFont roundNumber;
   PFont t;
   boolean red= false;
   boolean blue = false;
@@ -11,22 +12,29 @@ public class Sketch extends PApplet {
   boolean shipColour = false; 
   boolean win = false;
   boolean lose = false;
+  int decorationX = 25;
+  int decorationY = 25;
   int speedAdd = 0;
   int speedMinus = 0;
   int intialSpeed = 5;
+  float bulletSpeed = 2;
+  float lastBullet = (float) 0.04;
   int a = 1;
   int n = 0;
   int additional = 0;
   int shipX = 50;
   int shipY = 50;
   int lives = 3;
-  float[] bulletsX = new float [500];
-  float[] circleY = new float [10];
-  float[] additionalLife = new float [10];
-  float[] upY = new float[10];
-  float[] speedUp = new float [10];
-  float[] downY = new float [10];
-  float [] speedDown = new float [10];
+  float[] rainY = new float [100];
+  float[] fireworksX = new float [129];
+  float[] fireworksY = new float [129];
+  float[] bulletsX = new float [51];
+  float[] circleY = new float [20];
+  float[] additionalLife = new float [20];
+  float[] upY = new float[20];
+  float[] speedUp = new float [20];
+  float[] downY = new float [20];
+  float [] speedDown = new float [20];
 	
 	
   /**
@@ -34,7 +42,7 @@ public class Sketch extends PApplet {
    */
   public void settings() {
 	// put your size call here
-    size(800, 800);
+    size(700, 700);
   }
 
   /** 
@@ -44,26 +52,59 @@ public class Sketch extends PApplet {
   public void setup() {
     background(210, 255, 173);
 
-    for (int i = 0; i < bulletsX.length; i++){
-      if (i % 50 > 0){
-        bulletsX[i] = random(2000 - width) + width;
-    }
-      if (i % 50 == 0){
-        bulletsX[i] = 2100;
-    }
+    for (int i = 0; i < 50; i++){
+      bulletsX[i] = random(2000 - width) + width;
   }   
+    bulletsX[50] = 2400;
 
     for (int i = 0; i < additionalLife.length; i++){
-      additionalLife[i] = random(2100 - width) + width;
-      speedUp[i] = random(2100 - width) + width;
-      speedDown[i] = random(2100 - width) + width;
-      upY[i] = height /5 * (i+2)/additionalLife.length;
-      downY[i] = height/2 * (i+3)/additionalLife.length;
-      circleY[i] = height * (i + 1)/additionalLife.length;
+      additionalLife[i] = random(2400 - width) + width + 25;
+      speedUp[i] = random(2400 - width) + width + 25;
+      speedDown[i] = random(2400 - width) + width + 25;
+      upY[i] = random(height);
+      downY[i] = random(height);
+      circleY[i] = random(height);
 
     }
 
+    for (int i = 0; i < 32; i++){
+      fireworksX[i] = decorationX;
+      fireworksY[i] = 0;
+
+      decorationX += 25;
+    }
+    for (int i = 32; i < 64; i++){
+      fireworksX[i] = width;
+      fireworksY[i] = decorationY;
+
+      decorationY += 25;
+    }
+
+    for (int i = 64; i < 96; i++){
+      decorationX -= 25;
+      fireworksX[i] = decorationX;
+      fireworksY[i] = height;
+
+      
+    }
+    for (int i = 96; i < 129; i++){
+      decorationY -= 25;
+      fireworksX[i] = 0;
+      fireworksY[i] = decorationY;
+
+      
+    }
+
+    for (int i = 0; i < rainY.length; i++){
+      rainY[i] = random(height) + 100;
+    }
+
+    
+
+    
+
     t = createFont("Arial", 40, true);
+    roundNumber = createFont("Arial", 20, true);
 
 
   }
@@ -112,45 +153,53 @@ public class Sketch extends PApplet {
       fill(255, 255, 255);
       textFont(t);
       text("You LOSE!!",300, 200);
+      for(int i = 0; i <rainY.length; i++){
+        int rainX = height * i/rainY.length;
+        fill(0, 0, 255);
+        rect(rainX, rainY[i], 3, 10);
+
+        rainY[i] ++;
+
+        if (rainY[i] > height){
+          rainY[i] = 0;
+        }
+      }
     }
     else if (win == true){
       fill(0,0,0);
       rect(0,0,width,height);
-      for(int i = 0; i < 4; i++){
-        if (i == 1){
-          fill(255, 0, 0);
-        }
-        else if (i == 2){
-          fill(0, 255, 0);
-        }
-        else if (i == 3){
-          fill(0, 0 ,255);
-        }
-      }
+      fill(255, 0, 0);
       textFont(t);
-      text("You WIN!!",300, 200);;
+      text("You WIN!!",300, 200);
+      for(int i = 0; i < fireworksX.length; i++){
+        float r = random(255);
+        float g = random(255);
+        float b = random(255);
+        fill(r,g,b);
+        ellipse(fireworksX[i], fireworksY[i], 25, 25);
+      }
     }
 
     // Ship
-    if (30 < mouseX && 80 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY){
+    if (30 < mouseX && 80 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY && shipColour == false){
       if(mousePressed){
       red = true;
       shipColour = true;
     }
   }
-    if (180 < mouseX && 230 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY){
+    if (180 < mouseX && 230 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY && shipColour == false){
       if(mousePressed){
       green = true;
       shipColour = true;
     }
   }
-    if (330 < mouseX && 380 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY){
+    if (330 < mouseX && 380 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY && shipColour == false){
       if(mousePressed){
       blue = true;
       shipColour = true;
     }
   }
-    if (480 < mouseX && 530 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY){
+    if (480 < mouseX && 530 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY && shipColour == false){
       if(mousePressed){
       yellow = true;
       shipColour = true;
@@ -205,15 +254,19 @@ public class Sketch extends PApplet {
       }
       
     }
-    
-    if (bulletsX[50 * a] < -20 && lives > 0){
-      n++;
-      a++;
+   
+    if (bulletsX[50] > 0 && shipColour == true && lives > 0){
+      fill(255, 255, 255);
+      textFont(roundNumber);
+      text("Round " +(n + 1), 20, 30);
     }
 
+
     // Additional Lives, speed up, and slow down
-  if (shipColour == true){
-    for (int i = 0; i < additionalLife.length; i++){
+  if (win == false){
+    if (lose == false){
+    if (shipColour == true){
+      for (int i = 0; i < additionalLife.length; i++){
       
       fill(255,192,203);
       ellipse(additionalLife[i],circleY[i], 20, 20);
@@ -222,11 +275,10 @@ public class Sketch extends PApplet {
       fill(255, 0, 0);
       triangle(speedDown[i] - 15, downY[i], speedDown[i], downY[i] + 25, speedDown[i] + 15, downY[i]);
 
-
-
-      speedUp[n] -=0.3 * (n+1);
-      speedDown[n]-=0.3 * (n+1);
-      additionalLife[n] -=0.3 * (n+1);
+      
+      speedUp[n] -=0.1 * (n+1);
+      speedDown[n]-=0.1 * (n+1);
+      additionalLife[n] -=0.1 * (n+1);
 
       if (shipX < additionalLife[n] + 10 && shipX + yes > additionalLife[n] && shipY < circleY[n] + 10 && shipY + no > circleY[n]){
         additionalLife[n] = -20;
@@ -246,131 +298,57 @@ public class Sketch extends PApplet {
       }
     }
   }
+}
+  }
 
     // Bullets
-   if(shipColour == true){
-    for (int i = 0; i < 49; i++){
+  if(win == false){
+    if(lose == false){
+    if(shipColour == true && lives > 0){
+      for(int i = 0; i < 50; i++){
       float bulletsY = height * i/50;
       fill(255, 255, 255);
       rect(bulletsX[i], bulletsY, 20, 5);
-
-     
+  
       rect(bulletsX[50], 50, 20, 5);
-
-      bulletsX[50] -=0.05;
-      bulletsX[i] -=2;
-
-      if (shipX < bulletsX[i] + 20 && shipX + yes > bulletsX[i] && shipY < bulletsY + 5 && shipY + no > bulletsY){
-        bulletsX[i] = -20; 
-        lives --;
-      }
-      if (lives == 0){
-        lose = true;
-       }
-      
-      if (shipX < bulletsX[50] + 20 && shipX + yes > bulletsX[50] && shipY < 50 + 5 && shipY + no > 50){
-        bulletsX[50] = -20; 
-        lives --;
-      }
-       if (lives == 0){
-        lose = true;
+  
+      if (bulletsX[50] > -20){
+        bulletsX[i] -= bulletSpeed;
+        bulletsX[50] -= lastBullet;
+  
+        if (shipX < bulletsX[i] + 20 && shipX + yes > bulletsX[i] && shipY < bulletsY + 5 && shipY + no > bulletsY){
+          bulletsX[i] = -20; 
+          lives --;
         }
-      }
-     }
-    
-    
-
-  if (bulletsX[50] < -20 && lives > 0){
-    for (int i = 50; i < 99; i++){
-      float bulletsY = height * (i-50)/50;
-      rect(bulletsX[i], bulletsY, 20, 5);
-
-     
-      rect(bulletsX[100], 50, 20, 5);
-
-      bulletsX[100] -=0.055;
-      bulletsX[i] -=3;
-
-      if (shipX < bulletsX[i] + 20 && shipX + yes > bulletsX[i] && shipY < bulletsY + 5 && shipY + no > bulletsY){
-        bulletsX[i] = -20; 
-        lives --;
-
         if (lives == 0){
           lose = true;
+         }
+        
+        if (shipX < bulletsX[50] + 20 && shipX + yes > bulletsX[50] && shipY < 50 + 5 && shipY + no > 50){
+          bulletsX[50] = -21; 
+          lives --;
+        }
+         if (lives == 0){
+          lose = true;
+          }
         }
       }
-      if (shipX < bulletsX[100] + 20 && shipX + yes > bulletsX[100] && shipY < 50 + 5 && shipY + no > 50){
-        bulletsX[100] = -20; 
-        lives --;
-
-        if (lives == 0){
-          lose = true;
+      if(bulletsX[50] < -20 && lives > 0){
+        for(int j = 0; j < 50; j++){
+          bulletsX[j] = random(2000 - width) + width;
+        }
+        bulletsX[50] = 2400;
+        n++;
+        bulletSpeed += 0.5;
+        lastBullet += 0.0115;
+        if (n == 20){
+          win = true;
         }
       }
     }
+   }
   }
-  if (bulletsX[100] < -20 && lives > 0){
-    for (int i = 100; i < 149; i++){
-      float bulletsY = height * (i-100)/50;
-      rect(bulletsX[i], bulletsY, 20, 5);
-
-     
-      rect(bulletsX[150], 50, 20, 5);
-
-      bulletsX[150] -=0.06;
-      bulletsX[i] -=4;
-
-      if (shipX < bulletsX[i] + 20 && shipX + yes > bulletsX[i] && shipY < bulletsY + 5 && shipY + no > bulletsY){
-        bulletsX[i] = -20; 
-        lives --;
-
-        if (lives == 0){
-          lose = true;
-        }
-      }
-      if (shipX < bulletsX[150] + 20 && shipX + yes > bulletsX[150] && shipY < 50 + 5 && shipY + no > 50){
-        bulletsX[150] = -20; 
-        lives --;
-
-        if (lives == 0){
-          lose = true;
-        }
-      }
-    }
-  }
-  if (bulletsX[150] < -20 && lives > 0){
-    for (int i = 150; i < 199; i++){
-      float bulletsY = height * (i-150)/50;
-      rect(bulletsX[i], bulletsY, 20, 5);
-
-     
-      rect(bulletsX[200], 50, 20, 5);
-
-      bulletsX[200] -=0.055;
-      bulletsX[i] -=5;
-
-      if (bulletsX[200] < 0){
-        win = true;
-      }
-
-      if (shipX < bulletsX[i] + 20 && shipX + yes > bulletsX[i] && shipY < bulletsY + 5 && shipY + no > bulletsY){
-        bulletsX[i] = -20; 
-        lives --;
-
-        if (lives == 0){
-          lose = true;
-        }
-      }
-      if (shipX < bulletsX[200] + 20 && shipX + yes > bulletsX[200] && shipY < 50 + 5 && shipY + no > 50){
-        bulletsX[200] = -20; 
-        lives --;
-
-        if (lives == 0){
-          lose = true;
-        }
-      }
-    }
-  }
+  
   
 
   }
