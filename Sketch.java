@@ -7,6 +7,10 @@ public class Sketch extends PApplet {
   PFont roundNumber;
   PFont colourChoice;
   PFont t;
+  PFont secretFont;
+  String name = " ";
+  boolean nameEnter = false;
+  boolean secretEnding = false;
   boolean pause = false;
   boolean red = false;
   boolean blue = false;
@@ -22,12 +26,12 @@ public class Sketch extends PApplet {
   int intialSpeed = 5;
   float bulletSpeed = 2;
   float lastBullet = (float) 0.04;
-  int a = 1;
   int n = 0;
-  int additional = 0;
   int shipX = 50;
   int shipY = 50;
   int lives = 3;
+  float secretBulletX = 2100;
+  float secretBulletY = 0;
   float[] rainY = new float [100];
   float[] fireworksX = new float [129];
   float[] fireworksY = new float [129];
@@ -63,9 +67,9 @@ public class Sketch extends PApplet {
 
     // Giving positions for the other objects
     for (int i = 0; i < additionalLife.length; i++){
-      additionalLife[i] = random(2400 - width) + width + 25;
-      speedUp[i] = random(2400 - width) + width + 25;
-      speedDown[i] = random(2400 - width) + width + 25;
+      additionalLife[i] = random(2200 - width) + width + 25;
+      speedUp[i] = random(2200 - width) + width + 25;
+      speedDown[i] = random(2200 - width) + width + 25;
       upY[i] = random(height);
       downY[i] = random(height);
       circleY[i] = random(height);
@@ -106,13 +110,14 @@ public class Sketch extends PApplet {
       rainY[i] = random(height) + 100;
     }
 
-    
+    secretBulletY = random(height);
 
     
 
     t = createFont("Arial", 40, true);
     roundNumber = createFont("Arial", 20, true);
     colourChoice = createFont("Arial", 30, true);
+    secretFont = createFont("Serif", 25, true);
 
 
   }
@@ -158,6 +163,12 @@ public class Sketch extends PApplet {
       if (lives == 1){
         ellipse(625, 20, 25, 25);
       }
+      
+      // Indication that user got the secret 
+      if (secretEnding == true){
+        fill(255,215,0);
+        rect(380, 10, 20, 5);
+      }
 
       // Wins and Loses Display
       if (lose == true){
@@ -175,6 +186,30 @@ public class Sketch extends PApplet {
 
           if (rainY[i] > height){
             rainY[i] = 0;
+          }
+        }
+      }
+      // Secret Ending 
+      else if(win == true && secretEnding == true){
+        fill(255, 255, 255);
+        rect(0,0,width,height);
+        
+        if (nameEnter == false){
+          fill(255, 255, 0);
+          textFont(secretFont);
+          text("Type your name and enter",width/2 - 150, height/3);
+          text(name, width/2 - 100, height/2);
+        }
+        for(int i = 0; i < fireworksX.length; i++){
+          float r = random(255);
+          float g = random(255);
+          float b = random(255);
+          fill(r,g,b);
+          ellipse(fireworksX[i], fireworksY[i], 25, 25);
+          if (nameEnter == true){
+            textFont(secretFont);
+            text(name +" you are the champion!!", width/2 - 200, height/3);
+            text("Congratulations for beating the game!", width/2 - 200, height/3 + 100);
           }
         }
       }
@@ -315,6 +350,23 @@ public class Sketch extends PApplet {
           }
         }
       }
+    
+    // Generation of the secret bullet
+    if (win == false){
+      if (lose == false){
+        if (shipColour == true && n == 9){
+          fill(255,215,0);
+          rect(secretBulletX, secretBulletY, 20, 5);
+
+          secretBulletX -=5;
+
+          if (shipX < secretBulletX + 20 && shipX + yes > secretBulletX && shipY < secretBulletY + 5 && shipY + no > secretBulletY){
+            secretEnding = true;
+            secretBulletX = -20;
+          }
+        }
+      }
+    }
 
       // Bullets user will have to dodge
     if(win == false){
@@ -327,7 +379,7 @@ public class Sketch extends PApplet {
             rect(bulletsX[i], bulletsY, 20, 5);
         
             rect(bulletsX[50], 50, 20, 5);
-        
+          
             if (bulletsX[50] > -20){
               bulletsX[i] -= bulletSpeed;
               bulletsX[50] -= lastBullet;
@@ -366,6 +418,7 @@ public class Sketch extends PApplet {
     }
     
   }
+  // Pause message
   if (pause == true){
     textFont(t);
     text("Paused", width/2 - 100, width/3);
@@ -373,6 +426,9 @@ public class Sketch extends PApplet {
 
 }
   
+   /**
+   * Checks to see if the user has pressed something on the keyboard
+   */
   public void keyPressed(){
     if (keyCode == CONTROL && pause == true){
       pause = false;
@@ -380,5 +436,23 @@ public class Sketch extends PApplet {
     else if (keyCode == CONTROL){
       pause = true;
     }
+    else if (keyCode == ENTER && win == true && secretEnding == true){
+      nameEnter = true;
+    }
+    else if (keyCode == BACKSPACE && win == true && secretEnding == true && nameEnter == false){
+      name = name.substring(0, name.length() - 1);
+    }
+  }
+  /**
+   * Checks to see if the user has typed something on the keyboard
+   */
+  public void keyTyped(){
+    if(win == true && nameEnter == false){
+      if (key != BACKSPACE){
+        name += key;
+      }
+     
+      
+    } 
   }
 }
