@@ -3,9 +3,12 @@ import processing.core.PFont;
 
 public class Sketch extends PApplet {
 
+  // Variables for the game
   PFont roundNumber;
+  PFont colourChoice;
   PFont t;
-  boolean red= false;
+  boolean pause = false;
+  boolean red = false;
   boolean blue = false;
   boolean green = false;
   boolean yellow = false;
@@ -50,13 +53,15 @@ public class Sketch extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
   public void setup() {
-    background(210, 255, 173);
+    background(0, 0, 30);
 
+    // Giving positions for the bullets
     for (int i = 0; i < 50; i++){
       bulletsX[i] = random(2000 - width) + width;
   }   
     bulletsX[50] = 2400;
 
+    // Giving positions for the other objects
     for (int i = 0; i < additionalLife.length; i++){
       additionalLife[i] = random(2400 - width) + width + 25;
       speedUp[i] = random(2400 - width) + width + 25;
@@ -67,6 +72,7 @@ public class Sketch extends PApplet {
 
     }
 
+    // Positions for the circles in the winning screen
     for (int i = 0; i < 32; i++){
       fireworksX[i] = decorationX;
       fireworksY[i] = 0;
@@ -95,6 +101,7 @@ public class Sketch extends PApplet {
       
     }
 
+    // Position for the rain in the losing screen
     for (int i = 0; i < rainY.length; i++){
       rainY[i] = random(height) + 100;
     }
@@ -105,6 +112,7 @@ public class Sketch extends PApplet {
 
     t = createFont("Arial", 40, true);
     roundNumber = createFont("Arial", 20, true);
+    colourChoice = createFont("Arial", 30, true);
 
 
   }
@@ -113,245 +121,264 @@ public class Sketch extends PApplet {
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
-	  
-    background(32);
+    if (pause == false){
+      background(0, 0, 30);
 
-    if(shipColour == false){
-    fill(255,0,0);
-    rect(30, height/2, 50, 20);
+    // Colours that can be used for the ship
+      if(shipColour == false){
+        fill(255, 255, 255);
+        textFont(colourChoice);
+        text("Click the colour you want for your ship", width/2 - 250, height/4);
 
-    fill(0,255,0);
-    rect(180, height/2, 50, 20);
+        fill(255, 0, 0);
+        rect(30, height/2, 50, 20);
 
-    fill(0,0,255);
-    rect(330, height/2, 50, 20);
+        fill(0, 255, 0);
+        rect(180, height/2, 50, 20);
 
-    fill(255,255,0);
-    rect(480, height/2, 50, 20);
-
-    }
-
-    // Lives display
-    fill (255,192,203);
-    if (lives == 3){
-      ellipse(700, 20, 25, 25);
-      ellipse(625, 20, 25, 25);
-      ellipse(550, 20, 25, 25);
-    }
-    if (lives == 2){
-      ellipse(700, 20, 25, 25);
-      ellipse(625, 20, 25, 25);
-    }
-    if (lives == 1){
-      ellipse(700, 20, 25, 25);
-    }
-
-    // Wins and Loses Display
-    if (lose == true){
-      fill(0,0,0);
-      rect(0,0,width,height);
-      fill(255, 255, 255);
-      textFont(t);
-      text("You LOSE!!",300, 200);
-      for(int i = 0; i <rainY.length; i++){
-        int rainX = height * i/rainY.length;
         fill(0, 0, 255);
-        rect(rainX, rainY[i], 3, 10);
+        rect(330, height/2, 50, 20);
 
-        rainY[i] ++;
+        fill(255, 255, 0);
+        rect(480, height/2, 50, 20);
 
-        if (rainY[i] > height){
-          rainY[i] = 0;
-        }
-      }
-    }
-    else if (win == true){
-      fill(0,0,0);
-      rect(0,0,width,height);
-      fill(255, 0, 0);
-      textFont(t);
-      text("You WIN!!",300, 200);
-      for(int i = 0; i < fireworksX.length; i++){
-        float r = random(255);
-        float g = random(255);
-        float b = random(255);
-        fill(r,g,b);
-        ellipse(fireworksX[i], fireworksY[i], 25, 25);
-      }
-    }
-
-    // Ship
-    if (30 < mouseX && 80 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY && shipColour == false){
-      if(mousePressed){
-      red = true;
-      shipColour = true;
-    }
-  }
-    if (180 < mouseX && 230 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY && shipColour == false){
-      if(mousePressed){
-      green = true;
-      shipColour = true;
-    }
-  }
-    if (330 < mouseX && 380 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY && shipColour == false){
-      if(mousePressed){
-      blue = true;
-      shipColour = true;
-    }
-  }
-    if (480 < mouseX && 530 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY && shipColour == false){
-      if(mousePressed){
-      yellow = true;
-      shipColour = true;
-    }
-  }
-  if (red == true){
-    fill(255, 0 , 0);
-  }
-  if (blue == true){
-    fill(0, 0, 255);
-  }
-  if (green == true){
-    fill(0, 255, 0);
-  }
-  if (yellow == true){
-    fill(255, 255, 0); 
-  }
-  if (shipColour == false){
-    fill(255, 255, 255);
-  }
-  int yes = width/10;
-  int no = height/20;
-  rect(shipX, shipY, yes, no);
-
-    // Movement of the ship
-    if (keyPressed){
-      if (key == 'w'){
-        shipY -=intialSpeed + speedAdd - speedMinus;
-      }
-      if (key == 's'){
-        shipY +=intialSpeed + speedAdd - speedMinus;
-      }
-      if (key == 'a'){
-        shipX -=intialSpeed + speedAdd - speedMinus;
-      }
-      if (key == 'd'){
-        shipX +=intialSpeed + speedAdd - speedMinus;
       }
 
-      // Boundary of the map
-      if (shipY < 0){
-        shipY +=intialSpeed + speedAdd - speedMinus;
+      // Lives display
+      fill (255,192,203);
+      if (lives == 3){
+        ellipse(625, 20, 25, 25);
+        ellipse(550, 20, 25, 25);
+        ellipse(475, 20, 25, 25);
       }
-      if (shipY + no > height){
-        shipY -= intialSpeed + speedAdd - speedMinus;
+      if (lives == 2){
+        ellipse(625, 20, 25, 25);
+        ellipse(550, 20, 25, 25);
       }
-      if (shipX < 0){
-        shipX += intialSpeed + speedAdd - speedMinus;
+      if (lives == 1){
+        ellipse(625, 20, 25, 25);
       }
-      if (shipX + yes > width){
-        shipX -= intialSpeed + speedAdd - speedMinus;
-      }
-      
-    }
-   
-    if (bulletsX[50] > 0 && shipColour == true && lives > 0){
-      fill(255, 255, 255);
-      textFont(roundNumber);
-      text("Round " +(n + 1), 20, 30);
-    }
 
+      // Wins and Loses Display
+      if (lose == true){
+        fill(0,0,0);
+        rect(0,0,width,height);
+        fill(128, 128, 128);
+        textFont(t);
+        text("You LOSE!!",width/2 - 100, height/3);
+        for(int i = 0; i <rainY.length; i++){
+          int rainX = height * i/rainY.length;
+          fill(0, 0, 255);
+          rect(rainX, rainY[i], 3, 10);
 
-    // Additional Lives, speed up, and slow down
-  if (win == false){
-    if (lose == false){
-    if (shipColour == true){
-      for (int i = 0; i < additionalLife.length; i++){
-      
-      fill(255,192,203);
-      ellipse(additionalLife[i],circleY[i], 20, 20);
-      fill(0,255,0);
-      triangle(speedUp[i] - 15, upY[i], speedUp[i], upY[i] - 25, speedUp[i] + 15, upY[i]);
-      fill(255, 0, 0);
-      triangle(speedDown[i] - 15, downY[i], speedDown[i], downY[i] + 25, speedDown[i] + 15, downY[i]);
+          rainY[i] ++;
 
-      
-      speedUp[n] -=0.1 * (n+1);
-      speedDown[n]-=0.1 * (n+1);
-      additionalLife[n] -=0.1 * (n+1);
-
-      if (shipX < additionalLife[n] + 10 && shipX + yes > additionalLife[n] && shipY < circleY[n] + 10 && shipY + no > circleY[n]){
-        additionalLife[n] = -20;
-        if (lives < 3){
-        lives ++; 
-        }
-      }
-      if (shipX < speedUp[n] + 15 && shipX + yes > speedUp[n] && shipY < upY[n] && shipY + no > upY[n] - 25){
-        speedUp[n] = -15;
-        speedAdd +=2;
-      }
-      if (shipX < speedDown[n] + 15 && shipX + yes > speedDown[n] && shipY < downY[n] + 25 && shipY + no > downY[n]){
-        speedDown[n] = -15;
-        if (speedMinus + 2 < speedAdd + intialSpeed){
-        speedMinus +=2;
-        }
-      }
-    }
-  }
-}
-  }
-
-    // Bullets
-  if(win == false){
-    if(lose == false){
-    if(shipColour == true && lives > 0){
-      for(int i = 0; i < 50; i++){
-      float bulletsY = height * i/50;
-      fill(255, 255, 255);
-      rect(bulletsX[i], bulletsY, 20, 5);
-  
-      rect(bulletsX[50], 50, 20, 5);
-  
-      if (bulletsX[50] > -20){
-        bulletsX[i] -= bulletSpeed;
-        bulletsX[50] -= lastBullet;
-  
-        if (shipX < bulletsX[i] + 20 && shipX + yes > bulletsX[i] && shipY < bulletsY + 5 && shipY + no > bulletsY){
-          bulletsX[i] = -20; 
-          lives --;
-        }
-        if (lives == 0){
-          lose = true;
-         }
-        
-        if (shipX < bulletsX[50] + 20 && shipX + yes > bulletsX[50] && shipY < 50 + 5 && shipY + no > 50){
-          bulletsX[50] = -21; 
-          lives --;
-        }
-         if (lives == 0){
-          lose = true;
+          if (rainY[i] > height){
+            rainY[i] = 0;
           }
         }
       }
-      if(bulletsX[50] < -20 && lives > 0){
-        for(int j = 0; j < 50; j++){
-          bulletsX[j] = random(2000 - width) + width;
+      else if (win == true){
+        fill(0,0,0);
+        rect(0,0,width,height);
+        fill(255, 0, 0);
+        textFont(t);
+        text("You WIN!!",width/2 - 100, height/3);
+        for(int i = 0; i < fireworksX.length; i++){
+          float r = random(255);
+          float g = random(255);
+          float b = random(255);
+          fill(r,g,b);
+          ellipse(fireworksX[i], fireworksY[i], 25, 25);
         }
-        bulletsX[50] = 2400;
-        n++;
-        bulletSpeed += 0.5;
-        lastBullet += 0.0115;
-        if (n == 20){
-          win = true;
+      }
+
+      // Allows user to click the rectangles to access the colour
+      if (30 < mouseX && 80 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY && shipColour == false){
+        if(mousePressed){
+          red = true;
+          shipColour = true;
+      }
+    }
+      if (180 < mouseX && 230 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY && shipColour == false){
+        if(mousePressed){
+          green = true;
+          shipColour = true;
+      }
+    }
+      if (330 < mouseX && 380 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY && shipColour == false){
+        if(mousePressed){
+          blue = true;
+          shipColour = true;
+      }
+    }
+      if (480 < mouseX && 530 > mouseX && height/2 < mouseY && height/2 + 50 > mouseY && shipColour == false){
+        if(mousePressed){
+          yellow = true;
+          shipColour = true;
+      }
+    }
+    if (red == true){
+      fill(255, 0 , 0);
+    }
+    if (blue == true){
+      fill(0, 0, 255);
+    }
+    if (green == true){
+      fill(0, 255, 0);
+    }
+    if (yellow == true){
+      fill(255, 255, 0); 
+    }
+    if (shipColour == false){
+      fill(255, 255, 255);
+    }
+    int yes = width/10;
+    int no = height/20;
+    // Ship user will control
+    rect(shipX, shipY, yes, no);
+
+      // Movement of the ship
+      if (keyPressed){
+        if (key == 'w'){
+          shipY -=intialSpeed + speedAdd - speedMinus;
+        }
+        if (key == 's'){
+          shipY +=intialSpeed + speedAdd - speedMinus;
+        }
+        if (key == 'a'){
+          shipX -=intialSpeed + speedAdd - speedMinus;
+        }
+        if (key == 'd'){
+          shipX +=intialSpeed + speedAdd - speedMinus;
+        }
+
+        // Boundary of the map
+        if (shipY < 0){
+          shipY = 0;
+        }
+        if (shipY + no > height){
+          shipY = height - no;
+        }
+        if (shipX < 0){
+          shipX = 0;
+        }
+        if (shipX + yes > width){
+          shipX = width - yes;
+        }
+        
+      }
+    
+      // Display of the round numbers
+      if (bulletsX[50] > 0 && shipColour == true && lives > 0){
+        fill(255, 255, 255);
+        textFont(roundNumber);
+        text("Round " +(n + 1), 20, 30);
+      }
+
+
+      // Additional Lives, speed up, and slow down 
+    if (win == false){
+      if (lose == false){
+        if (shipColour == true){
+          for (int i = 0; i < additionalLife.length; i++){
+        
+            fill(255,192,203);
+            ellipse(additionalLife[i],circleY[i], 20, 20);
+            fill(0,255,0);
+            triangle(speedUp[i] - 15, upY[i], speedUp[i], upY[i] - 25, speedUp[i] + 15, upY[i]);
+            fill(255, 0, 0);
+            triangle(speedDown[i] - 15, downY[i], speedDown[i], downY[i] + 25, speedDown[i] + 15, downY[i]);
+
+            
+            speedUp[n] -=0.1 * (n+1);
+            speedDown[n]-=0.1 * (n+1);
+            additionalLife[n] -=0.1 * (n+1);
+
+            if (shipX < additionalLife[n] + 10 && shipX + yes > additionalLife[n] && shipY < circleY[n] + 10 && shipY + no > circleY[n]){
+              additionalLife[n] = -20;
+              if (lives < 3){
+                lives ++; 
+                }
+            }
+            if (shipX < speedUp[n] + 15 && shipX + yes > speedUp[n] && shipY < upY[n] && shipY + no > upY[n] - 25){
+              speedUp[n] = -15;
+              speedAdd +=2;
+            }
+            if (shipX < speedDown[n] + 15 && shipX + yes > speedDown[n] && shipY < downY[n] + 25 && shipY + no > downY[n]){
+              speedDown[n] = -15;
+              if (speedMinus + 2 < speedAdd + intialSpeed){
+                speedMinus +=2;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Bullets user will have to dodge
+    if(win == false){
+      if(lose == false){
+        if(shipColour == true && lives > 0){
+          for(int i = 0; i < 50; i++){
+            
+            float bulletsY = height * i/50;
+            fill(255, 255, 255);
+            rect(bulletsX[i], bulletsY, 20, 5);
+        
+            rect(bulletsX[50], 50, 20, 5);
+        
+            if (bulletsX[50] > -20){
+              bulletsX[i] -= bulletSpeed;
+              bulletsX[50] -= lastBullet;
+        
+              if (shipX < bulletsX[i] + 20 && shipX + yes > bulletsX[i] && shipY < bulletsY + 5 && shipY + no > bulletsY){
+                bulletsX[i] = -20; 
+                lives --;
+              }
+              if (lives == 0){
+                lose = true;
+              }
+              
+              if (shipX < bulletsX[50] + 20 && shipX + yes > bulletsX[50] && shipY < 50 + 5 && shipY + no > 50){
+                bulletsX[50] = -21; 
+                lives --;
+              }
+              if (lives == 0){
+                lose = true;
+                }
+              }
+            }
+          if(bulletsX[50] < -20 && lives > 0){
+            for(int j = 0; j < 50; j++){
+              bulletsX[j] = random(2000 - width) + width;
+            }
+            bulletsX[50] = 2400;
+            n++;
+            bulletSpeed += 0.5;
+            lastBullet += 0.0115;
+            if (n == 20){
+              win = true;
+            }
+          }
         }
       }
     }
-   }
+    
   }
-  
-  
+  if (pause == true){
+    textFont(t);
+    text("Paused", width/2 - 100, width/3);
+  }
 
-  }
+}
   
-  // define other methods down here.
+  public void keyPressed(){
+    if (keyCode == CONTROL && pause == true){
+      pause = false;
+    }
+    else if (keyCode == CONTROL){
+      pause = true;
+    }
+  }
 }
