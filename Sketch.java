@@ -358,7 +358,7 @@ public class Sketch extends PApplet {
           fill(255,215,0);
           rect(secretBulletX, secretBulletY, 20, 5);
 
-          secretBulletX -=5;
+          secretBulletX -=8;
 
           if (shipX < secretBulletX + 20 && shipX + yes > secretBulletX && shipY < secretBulletY + 5 && shipY + no > secretBulletY){
             secretEnding = true;
