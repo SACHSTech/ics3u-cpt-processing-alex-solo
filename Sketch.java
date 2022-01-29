@@ -268,10 +268,10 @@ public class Sketch extends PApplet {
     if (shipColour == false){
       fill(255, 255, 255);
     }
-    int yes = width/10;
-    int no = height/20;
+    int shipLength = width/10;
+    int shipHeight = height/20;
     // Ship user will control
-    rect(shipX, shipY, yes, no);
+    rect(shipX, shipY, shipLength, shipHeight);
 
       // Movement of the ship
       if (keyPressed){
@@ -292,14 +292,14 @@ public class Sketch extends PApplet {
         if (shipY < 0){
           shipY = 0;
         }
-        if (shipY + no > height){
-          shipY = height - no;
+        if (shipY + shipHeight > height){
+          shipY = height - shipHeight;
         }
         if (shipX < 0){
           shipX = 0;
         }
-        if (shipX + yes > width){
-          shipX = width - yes;
+        if (shipX + shipLength > width){
+          shipX = width - shipLength;
         }
         
       }
@@ -330,17 +330,17 @@ public class Sketch extends PApplet {
             speedDown[n]-=0.1 * (n+1);
             additionalLife[n] -=0.1 * (n+1);
 
-            if (shipX < additionalLife[n] + 10 && shipX + yes > additionalLife[n] && shipY < circleY[n] + 10 && shipY + no > circleY[n]){
+            if (shipX < additionalLife[n] + 10 && shipX + shipLength > additionalLife[n] && shipY < circleY[n] + 10 && shipY + shipHeight > circleY[n]){
               additionalLife[n] = -20;
               if (lives < 3){
                 lives ++; 
                 }
             }
-            if (shipX < speedUp[n] + 15 && shipX + yes > speedUp[n] && shipY < upY[n] && shipY + no > upY[n] - 25){
+            if (shipX < speedUp[n] + 15 && shipX + shipLength > speedUp[n] && shipY < upY[n] && shipY + shipHeight > upY[n] - 25){
               speedUp[n] = -15;
               speedAdd +=2;
             }
-            if (shipX < speedDown[n] + 15 && shipX + yes > speedDown[n] && shipY < downY[n] + 25 && shipY + no > downY[n]){
+            if (shipX < speedDown[n] + 15 && shipX + shipLength > speedDown[n] && shipY < downY[n] + 25 && shipY + shipHeight > downY[n]){
               speedDown[n] = -15;
               if (speedMinus + 2 < speedAdd + intialSpeed){
                 speedMinus +=2;
@@ -358,9 +358,9 @@ public class Sketch extends PApplet {
           fill(255,215,0);
           rect(secretBulletX, secretBulletY, 20, 5);
 
-          secretBulletX -=8;
+          secretBulletX -= 8;
 
-          if (shipX < secretBulletX + 20 && shipX + yes > secretBulletX && shipY < secretBulletY + 5 && shipY + no > secretBulletY){
+          if (shipX < secretBulletX + 20 && shipX + shipLength > secretBulletX && shipY < secretBulletY + 5 && shipY + shipHeight > secretBulletY){
             secretEnding = true;
             secretBulletX = -20;
           }
@@ -384,7 +384,7 @@ public class Sketch extends PApplet {
               bulletsX[i] -= bulletSpeed;
               bulletsX[50] -= lastBullet;
         
-              if (shipX < bulletsX[i] + 20 && shipX + yes > bulletsX[i] && shipY < bulletsY + 5 && shipY + no > bulletsY){
+              if (shipX < bulletsX[i] + 20 && shipX + shipLength > bulletsX[i] && shipY < bulletsY + 5 && shipY + shipHeight > bulletsY){
                 bulletsX[i] = -20; 
                 lives --;
               }
@@ -392,7 +392,7 @@ public class Sketch extends PApplet {
                 lose = true;
               }
               
-              if (shipX < bulletsX[50] + 20 && shipX + yes > bulletsX[50] && shipY < 50 + 5 && shipY + no > 50){
+              if (shipX < bulletsX[50] + 20 && shipX + shipLength > bulletsX[50] && shipY < 50 + 5 && shipY + shipHeight > 50){
                 bulletsX[50] = -21; 
                 lives --;
               }
