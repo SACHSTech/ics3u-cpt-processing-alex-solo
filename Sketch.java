@@ -6,7 +6,7 @@ public class Sketch extends PApplet {
   // Variables for the game
   PFont roundNumber;
   PFont colourChoice;
-  PFont t;
+  PFont screenFont;
   PFont secretFont;
   String name = " ";
   boolean nameEnter = false;
@@ -114,7 +114,7 @@ public class Sketch extends PApplet {
 
     
 
-    t = createFont("Arial", 40, true);
+    screenFont = createFont("Arial", 40, true);
     roundNumber = createFont("Arial", 20, true);
     colourChoice = createFont("Arial", 30, true);
     secretFont = createFont("Serif", 25, true);
@@ -175,7 +175,7 @@ public class Sketch extends PApplet {
         fill(0,0,0);
         rect(0,0,width,height);
         fill(128, 128, 128);
-        textFont(t);
+        textFont(screenFont);
         text("You LOSE!!",width/2 - 100, height/3);
         for(int i = 0; i <rainY.length; i++){
           int rainX = height * i/rainY.length;
@@ -217,7 +217,7 @@ public class Sketch extends PApplet {
         fill(0,0,0);
         rect(0,0,width,height);
         fill(255, 0, 0);
-        textFont(t);
+        textFont(screenFont);
         text("You WIN!!",width/2 - 100, height/3);
         for(int i = 0; i < fireworksX.length; i++){
           float r = random(255);
@@ -420,7 +420,7 @@ public class Sketch extends PApplet {
   }
   // Pause message
   if (pause == true){
-    textFont(t);
+    textFont(screenFont);
     text("Paused", width/2 - 100, width/3);
   }
 
